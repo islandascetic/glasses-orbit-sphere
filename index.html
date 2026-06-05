@@ -31,8 +31,8 @@
       width: 600px;
       height: 600px;
       background:
-        radial-gradient(circle at 50% 52%, rgba(0, 229, 255, 0.16), transparent 32%),
-        radial-gradient(circle at 50% 62%, rgba(167, 139, 250, 0.08), transparent 42%),
+        radial-gradient(circle at 50% 52%, rgba(0, 229, 255, 0.12), transparent 32%),
+        radial-gradient(circle at 50% 62%, rgba(167, 139, 250, 0.07), transparent 42%),
         #000;
     }
 
@@ -46,7 +46,7 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      padding: 26px;
+      padding: 24px;
       box-sizing: border-box;
       display: grid;
       grid-template-rows: auto 1fr auto;
@@ -70,7 +70,7 @@
     .eyebrow {
       font-size: 13px;
       letter-spacing: 0.22em;
-      color: rgba(255, 255, 255, 0.55);
+      color: rgba(255, 255, 255, 0.56);
       text-transform: uppercase;
     }
 
@@ -78,14 +78,15 @@
       margin: 0;
       font-size: 30px;
       line-height: 1;
-      font-weight: 750;
+      font-weight: 760;
     }
 
     .pill,
-    .panel {
+    .panel,
+    .anchor-indicator {
       border: 1px solid rgba(255, 255, 255, 0.16);
-      background: rgba(10, 18, 30, 0.56);
-      box-shadow: 0 0 28px rgba(0, 229, 255, 0.09), inset 0 0 18px rgba(255, 255, 255, 0.04);
+      background: rgba(10, 18, 30, 0.48);
+      box-shadow: 0 0 28px rgba(0, 229, 255, 0.08), inset 0 0 18px rgba(255, 255, 255, 0.04);
       backdrop-filter: blur(10px);
       border-radius: 18px;
     }
@@ -93,40 +94,24 @@
     .pill {
       padding: 10px 14px;
       font-size: 15px;
-      color: rgba(255, 255, 255, 0.82);
+      color: rgba(255, 255, 255, 0.84);
       white-space: nowrap;
     }
 
-    .center-reticle {
+    .anchor-indicator {
       align-self: center;
       justify-self: center;
-      width: 286px;
-      height: 286px;
-      border: 1px solid rgba(0, 229, 255, 0.2);
-      border-radius: 999px;
-      box-shadow: inset 0 0 40px rgba(0, 229, 255, 0.04), 0 0 70px rgba(0, 229, 255, 0.08);
-      position: relative;
-      opacity: 0.72;
+      padding: 9px 13px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.66);
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 160ms ease, transform 160ms ease;
     }
 
-    .center-reticle::before,
-    .center-reticle::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    .center-reticle::before {
-      width: 84px;
-      height: 1px;
-    }
-
-    .center-reticle::after {
-      width: 1px;
-      height: 84px;
+    .anchor-indicator.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .bottom {
@@ -144,23 +129,23 @@
 
     .readout {
       display: grid;
-      grid-template-columns: repeat(3, max-content);
-      gap: 13px;
+      grid-template-columns: repeat(4, max-content);
+      gap: 11px;
       align-items: center;
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.7);
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.68);
     }
 
     .readout strong {
       color: rgba(255, 255, 255, 0.94);
-      font-weight: 650;
+      font-weight: 660;
     }
 
     .hint {
       font-size: 13px;
       color: rgba(255, 255, 255, 0.52);
       text-align: right;
-      max-width: 210px;
+      max-width: 218px;
     }
 
     .permission {
@@ -179,7 +164,7 @@
       width: 100%;
       border-radius: 28px;
       border: 1px solid rgba(0, 229, 255, 0.3);
-      background: rgba(8, 12, 20, 0.86);
+      background: rgba(8, 12, 20, 0.88);
       box-shadow: 0 0 60px rgba(0, 229, 255, 0.16);
       padding: 28px;
       text-align: center;
@@ -207,7 +192,7 @@
       background: linear-gradient(135deg, #00e5ff, #a78bfa);
       color: #031018;
       font-size: 18px;
-      font-weight: 750;
+      font-weight: 760;
       box-shadow: 0 0 32px rgba(0, 229, 255, 0.28);
     }
 
@@ -217,35 +202,36 @@
   </style>
 </head>
 <body>
-  <main id="stage" aria-label="Orientation controlled sphere prototype">
+  <main id="stage" aria-label="World anchored orientation sphere prototype">
     <div id="permission" class="permission">
       <section class="permission-card">
-        <div class="eyebrow">MRBD SENSOR DEMO</div>
-        <h2>Glasses Orbit Sphere</h2>
-        <p>Press Enter to enable orientation/motion. The object rotates with headset orientation. Distance is approximated when motion data is available, and can be adjusted with arrows for testing.</p>
-        <button id="startButton">Start Sensors</button>
+        <div class="eyebrow">MRBD SPATIAL ILLUSION</div>
+        <h2>Room-Anchored Sphere</h2>
+        <p>Press Enter to start sensors. The sphere anchors in front of you; looking away moves it off screen. Up/down simulates walking closer or farther.</p>
+        <button id="startButton">Start + Anchor</button>
       </section>
     </div>
 
     <div class="hud" aria-hidden="true">
       <div class="top">
         <div class="title">
-          <div class="eyebrow">ORIENTATION LINK</div>
+          <div class="eyebrow">WORLD ANCHOR DEMO</div>
           <h1>Orbit Sphere</h1>
         </div>
         <div class="pill" id="status">Waiting</div>
       </div>
 
-      <div class="center-reticle"></div>
+      <div id="anchorIndicator" class="anchor-indicator">Anchor is outside your view</div>
 
       <div class="bottom">
         <div class="panel">
           <div class="readout">
-            <span>Yaw <strong id="yaw">0°</strong></span>
-            <span>Pitch <strong id="pitch">0°</strong></span>
-            <span>Range <strong id="range">1.0m</strong></span>
+            <span>ΔYaw <strong id="yaw">0°</strong></span>
+            <span>ΔPitch <strong id="pitch">0°</strong></span>
+            <span>Range <strong id="range">1.2m</strong></span>
+            <span>Visible <strong id="visible">yes</strong></span>
           </div>
-          <div class="hint">Arrows adjust test distance/angle. Enter toggles sensors.</div>
+          <div class="hint">Enter re-anchors. Arrows test walking and side-look.</div>
         </div>
       </div>
     </div>
@@ -256,6 +242,9 @@
 
     const WIDTH = 600;
     const HEIGHT = 600;
+    const HORIZONTAL_FOV = 42;
+    const VERTICAL_FOV = 42;
+
     const stage = document.getElementById('stage');
     const permission = document.getElementById('permission');
     const startButton = document.getElementById('startButton');
@@ -263,6 +252,8 @@
     const yawEl = document.getElementById('yaw');
     const pitchEl = document.getElementById('pitch');
     const rangeEl = document.getElementById('range');
+    const visibleEl = document.getElementById('visible');
+    const anchorIndicator = document.getElementById('anchorIndicator');
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -273,17 +264,17 @@
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(42, WIDTH / HEIGHT, 0.1, 100);
-    camera.position.set(0, 0.08, 4.0);
+    camera.position.set(0, 0, 4.1);
 
     const group = new THREE.Group();
     scene.add(group);
 
-    const sphereGeometry = new THREE.IcosahedronGeometry(1.05, 5);
+    const sphereGeometry = new THREE.IcosahedronGeometry(1.0, 5);
     const sphereMaterial = new THREE.MeshStandardMaterial({
       color: 0x53eaff,
-      emissive: 0x063a44,
-      roughness: 0.38,
-      metalness: 0.25
+      emissive: 0x073b45,
+      roughness: 0.36,
+      metalness: 0.24
     });
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     group.add(sphere);
@@ -295,24 +286,23 @@
     wire.scale.setScalar(1.012);
     group.add(wire);
 
-    const ringMaterial = new THREE.MeshBasicMaterial({ color: 0xa78bfa, transparent: true, opacity: 0.42, side: THREE.DoubleSide });
-    const ring1 = new THREE.Mesh(new THREE.TorusGeometry(1.34, 0.012, 12, 160), ringMaterial);
-    const ring2 = ring1.clone();
-    ring2.rotation.x = Math.PI / 2;
-    const ring3 = ring1.clone();
-    ring3.rotation.y = Math.PI / 2;
-    group.add(ring1, ring2, ring3);
+    const ringMaterial = new THREE.MeshBasicMaterial({ color: 0xa78bfa, transparent: true, opacity: 0.45, side: THREE.DoubleSide });
+    const rings = [0, Math.PI / 2, Math.PI / 2].map((rotation, index) => {
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(1.32, 0.012, 12, 160), ringMaterial);
+      if (index === 1) ring.rotation.x = rotation;
+      if (index === 2) ring.rotation.y = rotation;
+      group.add(ring);
+      return ring;
+    });
 
-    const floor = new THREE.Mesh(
-      new THREE.CircleGeometry(1.8, 96),
+    const glow = new THREE.Mesh(
+      new THREE.SphereGeometry(1.12, 48, 48),
       new THREE.MeshBasicMaterial({ color: 0x00e5ff, transparent: true, opacity: 0.08 })
     );
-    floor.position.y = -1.34;
-    floor.rotation.x = -Math.PI / 2;
-    group.add(floor);
+    group.add(glow);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.72));
-    const keyLight = new THREE.DirectionalLight(0x9ef7ff, 2.6);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+    const keyLight = new THREE.DirectionalLight(0x9ef7ff, 2.8);
     keyLight.position.set(2.8, 3.6, 4.2);
     scene.add(keyLight);
     const rimLight = new THREE.PointLight(0xa78bfa, 18, 8);
@@ -324,10 +314,13 @@
       yaw: 0,
       pitch: 0,
       roll: 0,
-      yawOffset: 0,
-      distance: 1.0,
+      anchorYaw: 0,
+      anchorPitch: 0,
+      manualYawOffset: 0,
+      distance: 1.8,
       distanceVelocity: 0,
-      lastMotionTime: 0
+      lastMotionTime: 0,
+      anchored: false
     };
 
     function clamp(value, min, max) {
@@ -336,6 +329,17 @@
 
     function radians(degrees) {
       return degrees * Math.PI / 180;
+    }
+
+    function normalizeAngle(degrees) {
+      return ((degrees + 540) % 360) - 180;
+    }
+
+    function anchorHere() {
+      state.anchorYaw = state.yaw + state.manualYawOffset;
+      state.anchorPitch = state.pitch;
+      state.anchored = true;
+      statusEl.textContent = 'Anchored';
     }
 
     async function requestSensors() {
@@ -350,8 +354,8 @@
         window.addEventListener('deviceorientation', handleOrientation, true);
         window.addEventListener('devicemotion', handleMotion, true);
         state.active = true;
-        statusEl.textContent = 'Sensors live';
         permission.classList.add('hidden');
+        anchorHere();
       } catch (error) {
         statusEl.textContent = 'Permission needed';
         console.error(error);
@@ -359,34 +363,33 @@
     }
 
     function handleOrientation(event) {
-      // alpha=yaw, beta=pitch, gamma=roll. Values vary by device/browser but are useful for a prototype.
       state.yaw = event.alpha ?? state.yaw;
       state.pitch = event.beta ?? state.pitch;
       state.roll = event.gamma ?? state.roll;
     }
 
     function handleMotion(event) {
-      // Web Apps do not expose reliable absolute indoor position. This lightly estimates near/far changes
-      // from forward acceleration when available, then damps it so it remains display-safe.
+      // This is only an illusion: browser motion sensors are not true room-position tracking.
       const z = event.acceleration?.z ?? event.accelerationIncludingGravity?.z;
       const now = performance.now();
       if (typeof z !== 'number') return;
       const dt = state.lastMotionTime ? Math.min((now - state.lastMotionTime) / 1000, 0.08) : 0;
       state.lastMotionTime = now;
       const signal = clamp(z / 18, -0.08, 0.08);
-      state.distanceVelocity = clamp((state.distanceVelocity * 0.86) + signal, -0.24, 0.24);
-      state.distance = clamp(state.distance + state.distanceVelocity * dt, 0.55, 2.2);
+      state.distanceVelocity = clamp((state.distanceVelocity * 0.88) + signal, -0.22, 0.22);
+      state.distance = clamp(state.distance + state.distanceVelocity * dt, 0.55, 3.0);
     }
 
     function handleKey(event) {
       if (event.key === 'Enter') {
-        requestSensors();
+        if (!state.active) requestSensors();
+        else anchorHere();
         return;
       }
-      if (event.key === 'ArrowUp') state.distance = clamp(state.distance - 0.08, 0.55, 2.2);
-      if (event.key === 'ArrowDown') state.distance = clamp(state.distance + 0.08, 0.55, 2.2);
-      if (event.key === 'ArrowLeft') state.yawOffset -= 8;
-      if (event.key === 'ArrowRight') state.yawOffset += 8;
+      if (event.key === 'ArrowUp') state.distance = clamp(state.distance - 0.10, 0.55, 3.0);
+      if (event.key === 'ArrowDown') state.distance = clamp(state.distance + 0.10, 0.55, 3.0);
+      if (event.key === 'ArrowLeft') state.manualYawOffset -= 8;
+      if (event.key === 'ArrowRight') state.manualYawOffset += 8;
     }
 
     startButton.addEventListener('click', requestSensors);
@@ -395,26 +398,47 @@
     function animate(time) {
       requestAnimationFrame(animate);
 
-      const yaw = radians((state.yaw + state.yawOffset) % 360);
-      const pitch = radians(clamp(state.pitch, -65, 65));
-      const roll = radians(clamp(state.roll, -55, 55));
+      const currentYaw = state.yaw + state.manualYawOffset;
+      const yawDelta = normalizeAngle(state.anchorYaw - currentYaw);
+      const pitchDelta = clamp(state.anchorPitch - state.pitch, -90, 90);
 
-      group.rotation.y = yaw;
-      group.rotation.x = -pitch * 0.45 + Math.sin(time * 0.0007) * 0.035;
-      group.rotation.z = roll * 0.18;
+      // Convert angular distance from the anchor into screen-space position.
+      // If the user turns away far enough, the sphere leaves the display.
+      const xNorm = Math.tan(radians(yawDelta)) / Math.tan(radians(HORIZONTAL_FOV / 2));
+      const yNorm = Math.tan(radians(pitchDelta)) / Math.tan(radians(VERTICAL_FOV / 2));
+      const inView = Math.abs(yawDelta) < HORIZONTAL_FOV * 0.78 && Math.abs(pitchDelta) < VERTICAL_FOV * 0.78;
+      const nearView = Math.abs(yawDelta) < HORIZONTAL_FOV * 1.2 && Math.abs(pitchDelta) < VERTICAL_FOV * 1.2;
+
+      group.visible = nearView;
+      group.position.x = clamp(xNorm * 1.9, -4.2, 4.2);
+      group.position.y = clamp(yNorm * 1.9, -4.2, 4.2);
+
+      const distanceScale = THREE.MathUtils.mapLinear(state.distance, 0.55, 3.0, 1.36, 0.30);
+      const edgeFade = inView ? 1 : 0.28;
+      const scale = THREE.MathUtils.lerp(group.scale.x, distanceScale * edgeFade, 0.1);
+      group.scale.setScalar(scale);
+
+      // The object itself keeps rotating subtly, but its position is anchored to the room bearing.
+      group.rotation.y = radians(yawDelta * 0.25) + time * 0.00016;
+      group.rotation.x = radians(-pitchDelta * 0.15) + Math.sin(time * 0.0007) * 0.026;
+      group.rotation.z = radians(clamp(state.roll, -50, 50) * 0.08);
       sphere.rotation.y += 0.004;
       wire.rotation.y -= 0.002;
-      ring1.rotation.z += 0.003;
-      ring2.rotation.y += 0.002;
+      rings[0].rotation.z += 0.003;
+      rings[1].rotation.y += 0.002;
 
-      const scale = THREE.MathUtils.lerp(group.scale.x, THREE.MathUtils.mapLinear(state.distance, 0.55, 2.2, 1.58, 0.62), 0.08);
-      group.scale.setScalar(scale);
-      group.position.x = Math.sin(yaw) * 0.38;
-      group.position.y = -Math.sin(pitch) * 0.22;
+      const opacity = inView ? 0 : 1;
+      anchorIndicator.classList.toggle('visible', opacity > 0 && state.anchored);
+      if (yawDelta > HORIZONTAL_FOV * 0.78) anchorIndicator.textContent = 'Anchor is to your right';
+      else if (yawDelta < -HORIZONTAL_FOV * 0.78) anchorIndicator.textContent = 'Anchor is to your left';
+      else if (pitchDelta > VERTICAL_FOV * 0.78) anchorIndicator.textContent = 'Anchor is above';
+      else if (pitchDelta < -VERTICAL_FOV * 0.78) anchorIndicator.textContent = 'Anchor is below';
+      else anchorIndicator.textContent = 'Anchor in view';
 
-      yawEl.textContent = `${Math.round((state.yaw + state.yawOffset) % 360)}°`;
-      pitchEl.textContent = `${Math.round(state.pitch)}°`;
+      yawEl.textContent = `${Math.round(yawDelta)}°`;
+      pitchEl.textContent = `${Math.round(pitchDelta)}°`;
       rangeEl.textContent = `${state.distance.toFixed(1)}m`;
+      visibleEl.textContent = inView ? 'yes' : 'no';
 
       renderer.render(scene, camera);
     }
